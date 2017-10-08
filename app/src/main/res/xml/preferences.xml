@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:dialogMessage="@string/app_zip_desc"
+        android:dialogTitle="@string/app_zip_code"
+        android:defaultValue="14580"
+        android:key="zip_code"
+        android:summary="@string/app_zip_desc"
+        android:title="@string/app_name" />
+
+    <ListPreference
+        android:entries="@array/units"
+        android:entryValues="@array/units_value"
+        android:key="units"
+        android:summary="@string/app_units_desc"
+        android:title="@string/app_units" />
+</PreferenceScreen>
