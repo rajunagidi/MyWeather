@@ -6,6 +6,7 @@
         android:dialogTitle="@string/app_zip_code"
         android:defaultValue="14580"
         android:key="zip_code"
+        android:inputType="number"
         android:summary="@string/app_zip_desc"
         android:title="@string/app_name" />
 
