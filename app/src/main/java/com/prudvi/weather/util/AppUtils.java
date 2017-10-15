@@ -25,16 +25,7 @@ import java.util.List;
 
 public class AppUtils {
 
-
-    static Comparator minComparator = new Comparator<Weather>() {
-        @Override
-        public int compare(Weather o1, Weather o2) {
-            if (Float.parseFloat(o1.getTempF()) < Float.parseFloat(o2.getTempF())) return 1;
-            return (Float.parseFloat(o1.getTempF()) > Float.parseFloat(o2.getTempF())) ? -1 : 0;
-        }
-    };
-
-    static Comparator maxComparator = new Comparator<Weather>() {
+    static Comparator COMPARATOR = new Comparator<Weather>() {
         @Override
         public int compare(Weather o1, Weather o2) {
             if (Float.parseFloat(o1.getTempF()) > Float.parseFloat(o2.getTempF())) return 1;
@@ -43,11 +34,11 @@ public class AppUtils {
     };
 
     public static Weather getMinTemperature(List<Weather> weathers) {
-        return (Weather) Collections.min(weathers, minComparator);
+        return (Weather) Collections.min(weathers, COMPARATOR);
     }
 
     public static Weather getMaxTemperature(List<Weather> weathers) {
-        return (Weather) Collections.max(weathers, maxComparator);
+        return (Weather) Collections.max(weathers, COMPARATOR);
     }
 
     public static String getZipCode(Context context) {

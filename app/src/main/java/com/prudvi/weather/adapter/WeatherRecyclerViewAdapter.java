@@ -23,11 +23,20 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public static final int VIEW_TYPE_ITEM = 1;
     private final String mHead;
     private final List<Weather> mWeathers;
+    UNITS mDisplayUnits = UNITS.C;
 
     public WeatherRecyclerViewAdapter(String header, List<Weather> weathers) {
         mHead = header;
         mWeathers = new ArrayList<>();
         mWeathers.addAll(weathers);
+    }
+
+    public UNITS getDisplayUnits() {
+        return mDisplayUnits;
+    }
+
+    public void setDisplayUnits(UNITS displayUnits) {
+        this.mDisplayUnits = displayUnits;
     }
 
     @Override
@@ -54,13 +63,13 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 //            Weather weather =
             final Weather weather = mWeathers.get(position - 1);
             hourHolder.mTime.setText(weather.getTime());
-            hourHolder.mTemperature.setText(weather.getTempC());
+            hourHolder.mTemperature.setText( mDisplayUnits == UNITS.C ? weather.getTempC():weather.getTempF());
             hourHolder.mWeather.setImageResource(getWeatherImage(weather));
 
             int color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorText);
-            if(weather.isHottest()){
+            if (weather.isHottest()) {
                 color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorHot);
-            }else if(weather.isCoolest()){
+            } else if (weather.isCoolest()) {
                 color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorCool);
             }
             hourHolder.mTime.setTextColor(color);
@@ -70,7 +79,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? VIEW_TYPE_HEAD: VIEW_TYPE_ITEM;
+        return position == 0 ? VIEW_TYPE_HEAD : VIEW_TYPE_ITEM;
     }
 
     private int getWeatherImage(Weather weather) {
@@ -81,6 +90,8 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public int getItemCount() {
         return mWeathers.size() + 1;
     }
+
+    public enum UNITS {C, F}
 
     public class ViewHolderHeadDay extends RecyclerView.ViewHolder {
 

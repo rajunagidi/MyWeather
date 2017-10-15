@@ -60,10 +60,12 @@ public class Umbrella extends AppCompatActivity {
         });
 
     }
-
+int mMeasuringUnits = 0;
     public void onResume() {
         super.onResume();
         String zip = AppUtils.getZipCode(Umbrella.this);
+        String unites = AppUtils.getUnites(Umbrella.this);
+        mMeasuringUnits = "0".equals(unites)? 0: 1;
         if (zip == null) {
             Toast.makeText(Umbrella.this, "Zip code requied for forecst", Toast.LENGTH_SHORT).show();
             return;
@@ -99,6 +101,7 @@ public class Umbrella extends AppCompatActivity {
 
 
             WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter("Today", forecast.getWeathers());
+            adapter.setDisplayUnits( mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C: WeatherRecyclerViewAdapter.UNITS.F);
             detailedView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
