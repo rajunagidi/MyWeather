@@ -1,5 +1,7 @@
 package com.prudvi.weather.adapter;
 
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.prudvi.weather.R;
 import com.prudvi.weather.model.Weather;
+import com.prudvi.weather.task.DownLoadUrlTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +62,22 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if (holder instanceof ViewHolderHeadDay) {
             ((ViewHolderHeadDay) holder).mDay.setText(mHead);
         } else if (holder instanceof ViewHolderItemHour) {
-            ViewHolderItemHour hourHolder = (ViewHolderItemHour) holder;
+            final ViewHolderItemHour hourHolder = (ViewHolderItemHour) holder;
 //            Weather weather =
             final Weather weather = mWeathers.get(position - 1);
             hourHolder.mTime.setText(weather.getTime());
             hourHolder.mTemperature.setText( mDisplayUnits == UNITS.C ? weather.getTempC():weather.getTempF());
-            hourHolder.mWeather.setImageResource(getWeatherImage(weather));
+            new DownLoadUrlTask(weather.getIconURL(), new DownLoadUrlTask.OnDownLoadUrlListener() {
+                @Override
+                public void onDownload(Bitmap icons) {
+                    hourHolder.mWeather.setImageBitmap(icons);
+                }
+
+                @Override
+                public void onFail(String error) {
+
+                }
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             int color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorText);
             if (weather.isHottest()) {

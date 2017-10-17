@@ -69,7 +69,8 @@ public class SettingsActivity extends AppCompatActivity {
                 preference.setSummary(((EditTextPreference) preference).getText());
             } else if (preference instanceof ListPreference) {
                 final String value = ((ListPreference) preference).getValue();
-                String units = (getResources().getStringArray(R.array.units))[Integer.parseInt(value)];
+                int index = value == null ? 0 : Integer.parseInt(value);
+                String units = (getResources().getStringArray(R.array.units))[index];
                 preference.setSummary(units);
             }
         }

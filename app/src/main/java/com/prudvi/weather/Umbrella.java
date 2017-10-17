@@ -28,6 +28,7 @@ public class Umbrella extends AppCompatActivity {
     ImageView mSettings;
     RecyclerView detailedView;
     RelativeLayout mTopSession;
+    int mMeasuringUnits = 0;
     private WeatherForecastManager mForeCastManager;
 
     @Override
@@ -60,12 +61,12 @@ public class Umbrella extends AppCompatActivity {
         });
 
     }
-int mMeasuringUnits = 0;
+
     public void onResume() {
         super.onResume();
         String zip = AppUtils.getZipCode(Umbrella.this);
         String unites = AppUtils.getUnites(Umbrella.this);
-        mMeasuringUnits = "0".equals(unites)? 0: 1;
+        mMeasuringUnits = "0".equals(unites) ? 0 : 1;
         if (zip == null) {
             Toast.makeText(Umbrella.this, "Zip code requied for forecst", Toast.LENGTH_SHORT).show();
             return;
@@ -82,13 +83,14 @@ int mMeasuringUnits = 0;
 
             }
         });
+
     }
 
     private void updateUI(WeatherForecast forecast) {
         if (isDestroyed()) return;
         if (forecast.getObservation() != null) {
             mLocation.setText(forecast.getObservation().getLocation());
-            mTemperature.setText(forecast.getObservation().getTempC());
+            mTemperature.setText(mMeasuringUnits == 0 ? forecast.getObservation().getTempC() : forecast.getObservation().getTempF());
             mWeather.setText(forecast.getObservation().getWeatherCondition());
             mTopSession.setBackgroundColor(AppUtils.getSessionColor(forecast.getObservation().getTempF()));
         }
@@ -101,7 +103,7 @@ int mMeasuringUnits = 0;
 
 
             WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter("Today", forecast.getWeathers());
-            adapter.setDisplayUnits( mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C: WeatherRecyclerViewAdapter.UNITS.F);
+            adapter.setDisplayUnits(mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C : WeatherRecyclerViewAdapter.UNITS.F);
             detailedView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
