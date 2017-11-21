@@ -22,13 +22,12 @@ public class Umbrella extends AppCompatActivity {
 
     private static String TAG = Umbrella.class.getSimpleName();
 
-    TextView mLocation;
-    TextView mWeather;
-    TextView mTemperature;
-    ImageView mSettings;
-    RecyclerView detailedView;
-    RelativeLayout mTopSession;
-    int mMeasuringUnits = 0;
+    private TextView mLocation;
+    private TextView mWeather;
+    private TextView mTemperature;
+    private RecyclerView detailedView;
+    private RelativeLayout mTopSession;
+    private int mMeasuringUnits = 0;
     private WeatherForecastManager mForeCastManager;
 
     @Override
@@ -102,7 +101,7 @@ public class Umbrella extends AppCompatActivity {
             weatherCool.setLowest();
 
 
-            WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter("Today", forecast.getWeathers());
+            WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter(forecast.getWeathers());
             adapter.setDisplayUnits(mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C : WeatherRecyclerViewAdapter.UNITS.F);
             detailedView.setAdapter(adapter);
             adapter.notifyDataSetChanged();

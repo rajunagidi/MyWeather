@@ -1,14 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Weather</string>
     <string name="app_zip_code">zip_code</string>
+    <string name="app_weather">Weather describing icon</string>
     <string name="app_zip_desc">Enter area zip code</string>
     <string name="app_units">Units</string>
-    <string name="app_units_key">units</string>
+    <string name="app_units_key" tools:keep="@string/app_units_key">units</string>
     <string name="app_location">Location Webster NY </string>
-    <string name="app_settings">Settings</string>
+    <string name="app_settings" tools:keep="@string/app_settings">Settings</string>
+    <string name="app_settings_desc">App Settings</string>
     <string name="app_climate">Climate</string>
     <string name="app_day">Day</string>
-    <string name="app_hour">Hour</string>
+    <string name="app_hour" tools:keep="@string/app_hour">Hour</string>
     <string name="app_temperature">68</string>
     <string name="app_units_desc">Select Unites to display</string>
 </resources>

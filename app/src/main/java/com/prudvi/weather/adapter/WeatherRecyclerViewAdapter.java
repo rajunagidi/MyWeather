@@ -22,14 +22,14 @@ import java.util.List;
 
 public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int VIEW_TYPE_HEAD = 0;
-    public static final int VIEW_TYPE_ITEM = 1;
+    private static final int VIEW_TYPE_HEAD = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
     private final String mHead;
     private final List<Weather> mWeathers;
-    UNITS mDisplayUnits = UNITS.C;
+    private UNITS mDisplayUnits = UNITS.C;
 
-    public WeatherRecyclerViewAdapter(String header, List<Weather> weathers) {
-        mHead = header;
+    public WeatherRecyclerViewAdapter(List<Weather> weathers) {
+        mHead = "Today";
         mWeathers = new ArrayList<>();
         mWeathers.addAll(weathers);
     }
@@ -74,7 +74,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 @Override
-                public void onFail(String error) {
+                public void onFail() {
 
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -108,7 +108,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public class ViewHolderHeadDay extends RecyclerView.ViewHolder {
 
-        public TextView mDay;
+        private final TextView mDay;
 
         public ViewHolderHeadDay(View itemView) {
             super(itemView);
@@ -118,9 +118,9 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public class ViewHolderItemHour extends RecyclerView.ViewHolder {
 
-        public TextView mTime;
-        public ImageView mWeather;
-        public TextView mTemperature;
+        private final TextView mTime;
+        private final ImageView mWeather;
+        private final TextView mTemperature;
 
         public ViewHolderItemHour(View itemView) {
             super(itemView);

@@ -20,12 +20,11 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by Prudvi Raju on 10/6/2017.
+ * Provides App helper functions
  */
-
 public class AppUtils {
 
-    static Comparator COMPARATOR = new Comparator<Weather>() {
+    private static final Comparator COMPARATOR = new Comparator<Weather>() {
         @Override
         public int compare(Weather o1, Weather o2) {
             if (Float.parseFloat(o1.getTempF()) > Float.parseFloat(o2.getTempF())) return 1;
@@ -55,7 +54,8 @@ public class AppUtils {
         return Float.parseFloat(tempF) < 60 ? R.color.colorCool : R.color.colorHot;
     }
 
-    public static void writeToExternalStorage(Context context, String data) throws IOException {
+    @SuppressWarnings("unused")
+    public static void writeToExternalStorage(String data) throws IOException {
         String tmpFile = "weather_son.txt";
         File externalFolder = Environment.getExternalStorageDirectory();
         File jsonOutputFile = new File(externalFolder, tmpFile);
@@ -63,19 +63,20 @@ public class AppUtils {
             jsonOutputFile.delete();
         }
         jsonOutputFile.createNewFile();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonOutputFile));) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonOutputFile))) {
             writer.write(data);
         }
     }
 
+    @SuppressWarnings("unused")
     public static String readFromExternalStorage() throws IOException {
         String tmpFile = "weather_son.txt";
         File externalFolder = Environment.getExternalStorageDirectory();
         File jsonOutputFile = new File(externalFolder, tmpFile);
 
         if (jsonOutputFile.exists()) {
-            StringBuffer buffer = new StringBuffer();
-            String data = null;
+            StringBuilder buffer = new StringBuilder();
+            String data;
             try (BufferedReader reader = new BufferedReader(new FileReader(jsonOutputFile))) {
                 while ((data = reader.readLine()) != null) {
                     buffer.append(data);

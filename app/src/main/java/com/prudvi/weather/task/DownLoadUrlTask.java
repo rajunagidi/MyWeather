@@ -10,14 +10,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Prudvi Raju on 10/16/2017.
+ * Download bitmap from the URL
  */
-
 public class DownLoadUrlTask extends AsyncTask<Void, Void, Bitmap> {
 
     private final String mUrl;
     private final OnDownLoadUrlListener mListener;
-    private LruCache<String, Bitmap> mBitmaps = new LruCache(10);
+    private final LruCache<String, Bitmap> mBitmaps = new LruCache<>(10);
 
     public DownLoadUrlTask(String urlToDownload, OnDownLoadUrlListener listener) {
         mUrl = urlToDownload;
@@ -58,13 +57,13 @@ public class DownLoadUrlTask extends AsyncTask<Void, Void, Bitmap> {
         if (bitmap != null) {
             mListener.onDownload(bitmap);
         } else {
-            mListener.onFail("Failed to download");
+            mListener.onFail();
         }
     }
 
     public interface OnDownLoadUrlListener {
         void onDownload(Bitmap icons);
-        void onFail(String error);
+        void onFail();
     }
 
 }

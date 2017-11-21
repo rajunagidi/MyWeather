@@ -17,17 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Prudvi Raju on 10/7/2017.
+ * Forecast Manager
  */
 
 public class WeatherForecastManager {
 
     private static final String TAG = WeatherForecastManager.class.getSimpleName();
-    private final Context mContext;
 
     public WeatherForecastManager(Context context) {
-        mContext = context;
-        if (mContext == null) throw new RuntimeException("Invalid Argument exception");
+        if (context == null) throw new RuntimeException("Invalid Argument exception");
     }
 
     public void getForeCastInfo(String zip, final OnForecastListener listener) {
@@ -39,7 +37,7 @@ public class WeatherForecastManager {
             }
 
             @Override
-            public void onError(int errorCode) {
+            public void onError() {
                 listener.onError();
             }
         });

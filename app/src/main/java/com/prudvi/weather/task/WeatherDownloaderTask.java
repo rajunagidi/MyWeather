@@ -1,6 +1,7 @@
 package com.prudvi.weather.task;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,19 +12,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Prudvi Raju on 10/7/2017.
+ * Downloads weather from Underground
  */
 
 public class WeatherDownloaderTask extends AsyncTask<Void, Void, String> {
 
-    OnWeatherDownloadListener mListener;
-    String mZipCode;
-    String request;
+    private final OnWeatherDownloadListener mListener;
+    private final String request;
+    private static final String TAG = "WeatherDownloaderTask";
 
     public WeatherDownloaderTask(String zipCode, OnWeatherDownloadListener listener) {
         mListener = listener;
-        mZipCode = zipCode;
-        request = String.format("http://api.wunderground.com/api/eae26379352995a4/conditions/hourly/q/%s.json", mZipCode);
+        request = String.format("http://api.wunderground.com/api/eae26379352995a4/conditions/hourly/q/%s.json", zipCode);
     }
 
     @Override
@@ -39,11 +39,11 @@ public class WeatherDownloaderTask extends AsyncTask<Void, Void, String> {
             if (resCode != HttpURLConnection.HTTP_OK) {
                 return null;
             }
-            int lenght = connection.getContentLength();
-            StringBuffer buffer = new StringBuffer();
+//            int length = connection.getContentLength();
+            StringBuilder buffer = new StringBuilder();
             InputStream inputStream = connection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String readLine = null;
+            String readLine;
             while ((readLine = bufferedReader.readLine()) != null) {
                 buffer.append(readLine);
             }
@@ -51,6 +51,7 @@ public class WeatherDownloaderTask extends AsyncTask<Void, Void, String> {
             return buffer.toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            Log.d(TAG, "malformed URL",e);
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -70,13 +71,13 @@ public class WeatherDownloaderTask extends AsyncTask<Void, Void, String> {
         if (result != null) {
             mListener.onSuccess(result);
         } else {
-            mListener.onError(0);
+            mListener.onError();
         }
     }
 
     public interface OnWeatherDownloadListener {
         void onSuccess(String json);
 
-        void onError(int errorCode);
+        void onError();
     }
 }
