@@ -20,10 +20,12 @@ public class WeatherDownloaderTask extends AsyncTask<Void, Void, String> {
     private final OnWeatherDownloadListener mListener;
     private final String request;
     private static final String TAG = "WeatherDownloaderTask";
+    private final String WEATHER_REQUEST_FORMAT = "http://api.wunderground.com/api/eae26379352995a4/conditions" +
+            "/hourly/q/%s.json";
 
     public WeatherDownloaderTask(String zipCode, OnWeatherDownloadListener listener) {
         mListener = listener;
-        request = String.format("http://api.wunderground.com/api/eae26379352995a4/conditions/hourly/q/%s.json", zipCode);
+        request = String.format(WEATHER_REQUEST_FORMAT, zipCode);
     }
 
     @Override
@@ -77,7 +79,6 @@ public class WeatherDownloaderTask extends AsyncTask<Void, Void, String> {
 
     public interface OnWeatherDownloadListener {
         void onSuccess(String json);
-
         void onError();
     }
 }

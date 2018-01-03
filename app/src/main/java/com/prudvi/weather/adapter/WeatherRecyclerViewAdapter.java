@@ -112,7 +112,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         public ViewHolderHeadDay(View itemView) {
             super(itemView);
-            mDay = (TextView) itemView.findViewById(R.id.day);
+            mDay = itemView.findViewById(R.id.day);
         }
     }
 
@@ -122,11 +122,11 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         private final ImageView mWeather;
         private final TextView mTemperature;
 
-        public ViewHolderItemHour(View itemView) {
+        ViewHolderItemHour(View itemView) {
             super(itemView);
-            mTime = (TextView) itemView.findViewById(R.id.hour);
-            mWeather = (ImageView) itemView.findViewById(R.id.weather);
-            mTemperature = (TextView) itemView.findViewById(R.id.temperature);
+            mTime = itemView.findViewById(R.id.hour);
+            mWeather = itemView.findViewById(R.id.weather);
+            mTemperature = itemView.findViewById(R.id.temperature);
         }
     }
 }
