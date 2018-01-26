@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+//import android.widget.Toolbar;
 
 import com.prudvi.weather.adapter.WeatherRecyclerViewAdapter;
 import com.prudvi.weather.jsonparser.WeatherForecast;
@@ -34,13 +35,16 @@ public class Umbrella extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_umbrella);
+        //Todo for next version
+        //Toolbar bar = findViewById(R.id.toolbar);
+        //setSupportActionBar(bar);
         mForeCastManager = new WeatherForecastManager(Umbrella.this);
 
-        mLocation = (TextView) findViewById(R.id.current_location);
-        mTemperature = (TextView) findViewById(R.id.current_temperature);
-        mWeather = (TextView) findViewById(R.id.current_weather);
-        mTopSession = (RelativeLayout) findViewById(R.id.top_session);
-        detailedView = (RecyclerView) findViewById(R.id.weather_today);
+        mLocation = findViewById(R.id.current_location);
+        mTemperature = findViewById(R.id.current_temperature);
+        mWeather = findViewById(R.id.current_weather);
+        mTopSession = findViewById(R.id.top_session);
+        detailedView = findViewById(R.id.weather_today);
 
         GridLayoutManager layoutManager = new GridLayoutManager(Umbrella.this, 3);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -67,7 +71,8 @@ public class Umbrella extends AppCompatActivity {
         String unites = AppUtils.getUnites(Umbrella.this);
         mMeasuringUnits = "0".equals(unites) ? 0 : 1;
         if (zip == null) {
-            Toast.makeText(Umbrella.this, "Zip code requied for forecst", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Umbrella.this, "Zip code requied for forecst", Toast.LENGTH_SHORT)
+                    .show();
             return;
         }
 
@@ -89,9 +94,11 @@ public class Umbrella extends AppCompatActivity {
         if (isDestroyed()) return;
         if (forecast.getObservation() != null) {
             mLocation.setText(forecast.getObservation().getLocation());
-            mTemperature.setText(mMeasuringUnits == 0 ? forecast.getObservation().getTempC() : forecast.getObservation().getTempF());
+            mTemperature.setText(mMeasuringUnits == 0 ? forecast.getObservation().getTempC() :
+                    forecast.getObservation().getTempF());
             mWeather.setText(forecast.getObservation().getWeatherCondition());
-            mTopSession.setBackgroundColor(AppUtils.getSessionColor(forecast.getObservation().getTempF()));
+            mTopSession.setBackgroundColor(AppUtils.getSessionColor(forecast.getObservation()
+                    .getTempF()));
         }
 
         if (forecast.getWeathers() != null) {
@@ -101,8 +108,10 @@ public class Umbrella extends AppCompatActivity {
             weatherCool.setLowest();
 
 
-            WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter(forecast.getWeathers());
-            adapter.setDisplayUnits(mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C : WeatherRecyclerViewAdapter.UNITS.F);
+            WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter(this, forecast
+                    .getWeathers());
+            adapter.setDisplayUnits(mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C :
+                    WeatherRecyclerViewAdapter.UNITS.F);
             detailedView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }

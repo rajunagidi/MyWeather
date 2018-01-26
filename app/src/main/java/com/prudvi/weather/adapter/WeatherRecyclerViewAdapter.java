@@ -1,7 +1,6 @@
 package com.prudvi.weather.adapter;
 
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.prudvi.weather.PicassoLoadIcon;
 import com.prudvi.weather.R;
 import com.prudvi.weather.model.Weather;
-import com.prudvi.weather.task.DownLoadUrlTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,11 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private static final int VIEW_TYPE_ITEM = 1;
     private final String mHead;
     private final List<Weather> mWeathers;
+    private final Context mContext;
     private UNITS mDisplayUnits = UNITS.C;
 
-    public WeatherRecyclerViewAdapter(List<Weather> weathers) {
+    public WeatherRecyclerViewAdapter(Context context, List<Weather> weathers) {
+        mContext = context;
         mHead = "Today";
         mWeathers = new ArrayList<>();
         mWeathers.addAll(weathers);
@@ -67,18 +68,8 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             final Weather weather = mWeathers.get(position - 1);
             hourHolder.mTime.setText(weather.getTime());
             hourHolder.mTemperature.setText( mDisplayUnits == UNITS.C ? weather.getTempC():weather.getTempF());
-            new DownLoadUrlTask(weather.getIconURL(), new DownLoadUrlTask.OnDownLoadUrlListener() {
-                @Override
-                public void onDownload(Bitmap icons) {
-                    hourHolder.mWeather.setImageBitmap(icons);
-                }
-
-                @Override
-                public void onFail() {
-
-                }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+            //replace async wiht picasso
+            PicassoLoadIcon.loadImage(mContext,hourHolder.mWeather,weather.getIconURL());
             int color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorText);
             if (weather.isHottest()) {
                 color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorHot);

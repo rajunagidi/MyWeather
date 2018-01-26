@@ -12,6 +12,8 @@ import java.net.URL;
 /**
  * Download bitmap from the URL
  */
+//replaced with picasso library
+@Deprecated
 public class DownLoadUrlTask extends AsyncTask<Void, Void, Bitmap> {
 
     private final String mUrl;

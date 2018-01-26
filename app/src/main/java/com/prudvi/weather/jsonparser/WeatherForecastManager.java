@@ -13,8 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Forecast Manager
@@ -42,6 +44,16 @@ public class WeatherForecastManager {
             }
         });
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    public void getForeCastInfoRxJava(String zip, final OnForecastListener listener) {
+        if (zip == null) return;
+//TODO converting to RxJava
+//        Observable.fromCallable(() -> {
+//        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+//                (result) -> {
+//                    /*Use result for something*/ });
     }
 
     public WeatherForecast parseWeatherJSON(String json) {
