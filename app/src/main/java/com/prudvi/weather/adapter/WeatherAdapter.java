@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.prudvi.weather.PicassoLoadIcon;
+import com.prudvi.weather.modle.Weather;
+import com.prudvi.weather.modle.WeatherHourly;
+import com.prudvi.weather.util.PicassoLoadIcon;
 import com.prudvi.weather.R;
-import com.prudvi.weather.model.Weather;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +20,16 @@ import java.util.List;
  * Created by Prudvi Raju on 10/6/2017.
  */
 
-public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HEAD = 0;
     private static final int VIEW_TYPE_ITEM = 1;
     private final String mHead;
-    private final List<Weather> mWeathers;
+    private final List<WeatherHourly> mWeathers;
     private final Context mContext;
     private UNITS mDisplayUnits = UNITS.C;
 
-    public WeatherRecyclerViewAdapter(Context context, List<Weather> weathers) {
+    public WeatherAdapter(Context context, List<WeatherHourly> weathers) {
         mContext = context;
         mHead = "Today";
         mWeathers = new ArrayList<>();
@@ -47,10 +48,12 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == VIEW_TYPE_HEAD) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_head_day, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
+                    .recycler_view_head_day, parent, false);
             return new ViewHolderHeadDay(view);
         } else if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item_hour, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
+                    .recycler_view_item_hour, parent, false);
             return new ViewHolderItemHour(view);
         }
 
@@ -65,11 +68,12 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         } else if (holder instanceof ViewHolderItemHour) {
             final ViewHolderItemHour hourHolder = (ViewHolderItemHour) holder;
 //            Weather weather =
-            final Weather weather = mWeathers.get(position - 1);
+            final WeatherHourly weather = mWeathers.get(position - 1);
             hourHolder.mTime.setText(weather.getTime());
-            hourHolder.mTemperature.setText( mDisplayUnits == UNITS.C ? weather.getTempC():weather.getTempF());
+            hourHolder.mTemperature.setText(mDisplayUnits == UNITS.C ? weather.getTempC() :
+                    weather.getTempF());
             //replace async wiht picasso
-            PicassoLoadIcon.loadImage(mContext,hourHolder.mWeather,weather.getIconURL());
+            PicassoLoadIcon.loadImage(mContext, hourHolder.mWeather, weather.getIconURL());
             int color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorText);
             if (weather.isHottest()) {
                 color = hourHolder.mTime.getContext().getResources().getColor(R.color.colorHot);

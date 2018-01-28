@@ -27,7 +27,8 @@ public class SettingsActivity extends AppCompatActivity {
         transaction.replace(R.id.settings_content, new SettingsFragment(), "pref").commit();
     }
 
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences
+            .OnSharedPreferenceChangeListener {
 
         public static final String UNITS = "units";
         public static final String ZIP_CODE = "zip_code";
@@ -47,14 +48,16 @@ public class SettingsActivity extends AppCompatActivity {
 
             preference = getPreferenceScreen().findPreference(UNITS);
             updatePreference(preference);
-            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener
+                    (this);
 
         }
 
         @Override
         public void onPause() {
             super.onPause();
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+            getPreferenceScreen().getSharedPreferences()
+                    .unregisterOnSharedPreferenceChangeListener(this);
         }
 
         @Override

@@ -10,41 +10,39 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.widget.Toolbar;
 
-import com.prudvi.weather.adapter.WeatherRecyclerViewAdapter;
-import com.prudvi.weather.jsonparser.WeatherForecast;
-import com.prudvi.weather.jsonparser.WeatherForecastManager;
-import com.prudvi.weather.listener.OnForecastListener;
-import com.prudvi.weather.model.Weather;
+import com.prudvi.weather.adapter.WeatherAdapter;
+import com.prudvi.weather.modle.Weather;
+import com.prudvi.weather.modle.WeatherHourly;
+import com.prudvi.weather.retrofit.RequestManager;
 import com.prudvi.weather.util.AppUtils;
+
+import butterknife.BindView;
 
 public class Umbrella extends AppCompatActivity {
 
-    private static String TAG = Umbrella.class.getSimpleName();
-
-    private TextView mLocation;
-    private TextView mWeather;
-    private TextView mTemperature;
-    private RecyclerView detailedView;
-    private RelativeLayout mTopSession;
+    private static final String TAG = "Umbrella";
+    private @BindView(R.id.current_location)
+    TextView mLocation;
+    private @BindView(R.id.current_weather)
+    TextView mWeather;
+    private @BindView(R.id.current_temperature)
+    TextView mTemperature;
+    private @BindView(R.id.top_session)
+    RelativeLayout mTopSession;
+    private @BindView(R.id.weather_today)
+    RecyclerView detailedView;
+    private @BindView(R.id.settings)
+    ImageView mSettings;
     private int mMeasuringUnits = 0;
-    private WeatherForecastManager mForeCastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_umbrella);
-        //Todo for next version
+        //Todo for next version collapsible tool bar
         //Toolbar bar = findViewById(R.id.toolbar);
         //setSupportActionBar(bar);
-        mForeCastManager = new WeatherForecastManager(Umbrella.this);
-
-        mLocation = findViewById(R.id.current_location);
-        mTemperature = findViewById(R.id.current_temperature);
-        mWeather = findViewById(R.id.current_weather);
-        mTopSession = findViewById(R.id.top_session);
-        detailedView = findViewById(R.id.weather_today);
 
         GridLayoutManager layoutManager = new GridLayoutManager(Umbrella.this, 3);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -55,12 +53,8 @@ public class Umbrella extends AppCompatActivity {
         });
         detailedView.setLayoutManager(layoutManager);
 
-        ImageView settings = (ImageView) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Umbrella.this, SettingsActivity.class));
-            }
+        mSettings.setOnClickListener((View v) -> {
+            startActivity(new Intent(Umbrella.this, SettingsActivity.class));
         });
 
     }
@@ -71,49 +65,42 @@ public class Umbrella extends AppCompatActivity {
         String unites = AppUtils.getUnites(Umbrella.this);
         mMeasuringUnits = "0".equals(unites) ? 0 : 1;
         if (zip == null) {
-            Toast.makeText(Umbrella.this, "Zip code requied for forecst", Toast.LENGTH_SHORT)
+            Toast.makeText(Umbrella.this, "Zip code required for forecast", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
 
-        mForeCastManager.getForeCastInfo(zip, new OnForecastListener() {
-            @Override
-            public void onSuccess(WeatherForecast forecast) {
-                updateUI(forecast);
-            }
-
-            @Override
-            public void onError() {
-
-            }
+        new RequestManager().requestWeatherForecast(zip, (Weather weather)-> {
+                updateUI(weather);
         });
-
     }
 
-    private void updateUI(WeatherForecast forecast) {
+    private void updateUI(Weather forecast) {
         if (isDestroyed()) return;
         if (forecast.getObservation() != null) {
             mLocation.setText(forecast.getObservation().getLocation());
             mTemperature.setText(mMeasuringUnits == 0 ? forecast.getObservation().getTempC() :
                     forecast.getObservation().getTempF());
-            mWeather.setText(forecast.getObservation().getWeatherCondition());
+            mWeather.setText(forecast.getObservation().display_name);
             mTopSession.setBackgroundColor(AppUtils.getSessionColor(forecast.getObservation()
                     .getTempF()));
         }
 
-        if (forecast.getWeathers() != null) {
-            Weather weatherHot = AppUtils.getMaxTemperature(forecast.getWeathers());
-            weatherHot.setHottest();
-            Weather weatherCool = AppUtils.getMinTemperature(forecast.getWeathers());
-            weatherCool.setLowest();
+        if (forecast.getWeatherHourly() != null && forecast.getWeatherHourly().size() > 1) {
+            WeatherHourly weatherHot = AppUtils.getMaxTemperature(forecast.getWeatherHourly());
+            weatherHot.setHottest(true);
+            WeatherHourly weatherCool = AppUtils.getMinTemperature(forecast.getWeatherHourly());
+            weatherCool.setCoolest(true);
 
 
-            WeatherRecyclerViewAdapter adapter = new WeatherRecyclerViewAdapter(this, forecast
-                    .getWeathers());
-            adapter.setDisplayUnits(mMeasuringUnits == 0 ? WeatherRecyclerViewAdapter.UNITS.C :
-                    WeatherRecyclerViewAdapter.UNITS.F);
+            WeatherAdapter adapter = new WeatherAdapter(this, forecast
+                    .getWeatherHourly());
+            adapter.setDisplayUnits(mMeasuringUnits == 0 ? WeatherAdapter.UNITS.C :
+                    WeatherAdapter.UNITS.F);
             detailedView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "Invalid zip code ", Toast.LENGTH_SHORT).show();
         }
     }
 }

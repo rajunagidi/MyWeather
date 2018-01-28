@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.prudvi.weather.R;
 import com.prudvi.weather.SettingsActivity;
-import com.prudvi.weather.model.Weather;
+import com.prudvi.weather.modle.WeatherHourly;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,20 +24,20 @@ import java.util.List;
  */
 public class AppUtils {
 
-    private static final Comparator COMPARATOR = new Comparator<Weather>() {
+    private static final Comparator COMPARATOR = new Comparator<WeatherHourly>() {
         @Override
-        public int compare(Weather o1, Weather o2) {
+        public int compare(WeatherHourly o1, WeatherHourly o2) {
             if (Float.parseFloat(o1.getTempF()) > Float.parseFloat(o2.getTempF())) return 1;
             return (Float.parseFloat(o1.getTempF()) < Float.parseFloat(o2.getTempF())) ? -1 : 0;
         }
     };
 
-    public static Weather getMinTemperature(List<Weather> weathers) {
-        return (Weather) Collections.min(weathers, COMPARATOR);
+    public static WeatherHourly getMinTemperature(List<WeatherHourly> weathers) {
+        return Collections.min(weathers, COMPARATOR);
     }
 
-    public static Weather getMaxTemperature(List<Weather> weathers) {
-        return (Weather) Collections.max(weathers, COMPARATOR);
+    public static WeatherHourly getMaxTemperature(List<WeatherHourly> weathers) {
+        return Collections.max(weathers, COMPARATOR);
     }
 
     public static String getZipCode(Context context) {
